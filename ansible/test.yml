@@ -1,0 +1,8 @@
+---
+- hosts: dummy
+  sudo: yes
+  tasks:
+  - name: test host var
+    command: echo "{{ fqdn }}"
+  - debug:
+      msg: "{{ fqdn }}"

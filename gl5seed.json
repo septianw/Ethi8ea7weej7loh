@@ -1,0 +1,49 @@
+{
+  "base": {
+    "protocol": "http",
+    "hostname": "gitlab.solusi247.com",
+    "port": 80,
+    "pathname": "api/v3/"
+  },
+  "path": {
+    "GET": {
+      "projects": {
+        "location": "projects",
+        "query": {
+          "private_token": "YyNkSBHuparhkHW2KtMp",
+          "per_page": 100
+        } 
+      },
+      "projectsmember": {
+        "location": "/projects/%(projectid)d/members",
+        "query": {
+          "private_token": "YyNkSBHuparhkHW2KtMp"
+        }
+      },
+      "users": {
+        "location": "users",
+        "query": {
+          "private_token": "YyNkSBHuparhkHW2KtMp"
+        }
+      },
+      "issues": {
+        "location": "issues",
+        "query": {
+          "private_token": "YyNkSBHuparhkHW2KtMp"
+        }
+      },
+      "milestones": {
+        "location": "/projects/%(projectid)d/milestones",
+        "query": {
+          "private_token": "YyNkSBHuparhkHW2KtMp"
+        }
+      },
+      "notes": {
+        "location": "/projects/%(projectid)d/notes",
+        "query": {
+          "private_token": "YyNkSBHuparhkHW2KtMp"
+        }
+      }
+    }
+  }
+}

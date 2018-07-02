@@ -1,0 +1,18 @@
+{
+  "name": "migration-script",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "beepbeep": "^1.2.2",
+    "flatfile": "^2.0.0",
+    "log": "^1.4.0",
+    "nodemailer": "^4.6.3",
+    "request-debug": "^0.2.0"
+  }
+}

@@ -1,0 +1,43 @@
+---
+- hosts: gitlabdev1
+  sudo: yes
+  tasks:
+  - hostname:
+      name: "{{ fqdn }}"
+
+  - name: Set hostname
+    template:
+      src: hosts.j2
+      dest: /etc/hosts
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Disable selinux
+    raw: sed -i -e 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+
+  - name: install package requirement
+    yum:
+      name: curl,policycoreutils-python,openssh-server,postfix
+      update_cache: yes
+
+  - name: restart sshd
+    systemd:
+      name: sshd
+      enabled: yes
+      state: started
+
+  - name: restart postfix
+    systemd:
+      name: postfix
+      enabled: yes
+      state: started
+
+  - name: Execute installation script
+    shell: curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
+
+  - name: install gitlab-ce
+    yum:
+      name: gitlab-ce
+    environment:
+      EXTERNAL_URL: "http://{{ fqdn }}"

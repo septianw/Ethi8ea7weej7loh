@@ -1,0 +1,68 @@
+{
+  "base": {
+    "protocol": "http",
+    "hostname": "gitlabdev1.as12.qc.labs247.id",
+    "port": 80,
+    "pathname": "/api/v4"
+  },
+  "path": {
+    "POST": {
+      "projects": {
+        "location": "/projects/user/%(user_id)d",
+        "query": {
+          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+        } 
+      },
+      "users": {
+        "location": "/users",
+        "query": {
+          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+        }
+      },
+      "issues": {
+        "location": "/issues",
+        "query": {
+          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+        }
+      },
+      "projectsmember": {
+        "location": "/projects/%(projectid)d/members",
+        "query": {
+          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+        }
+      },
+      "milestones": {
+        "location": "/projects/%(projectid)d/milestones",
+        "query": {
+          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+        }
+      },
+      "notes": {
+        "location": "/projects/%(projectid)d/notes",
+        "query": {
+          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+        }
+      }
+    },
+    "GET": {
+      "version": {
+        "location": "/version",
+        "query": {
+          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+        }
+      },
+      "users": {
+        "location": "/users",
+        "query": {
+          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+        }
+      },
+      "projects": {
+        "location": "/projects",
+        "query": {
+          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+        } 
+      }
+    }
+  }
+}
