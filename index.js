@@ -638,6 +638,9 @@ function projectsMembers() {
             console.log('kosong line 632');
             debugger;
           } else {
+            if (typeof dy.filter !== 'function') {
+              debugger;
+            }
             var p = dy.filter(function (project) {
               return project.path == c.path;
             });
@@ -790,70 +793,71 @@ function projectsMembers() {
   });
 }
 
-projectsMembers();
-asep.on('projectMember_done', function () {
-  verifyStatus();
-});
-asep.on('verify_invalid', function (project, user) {
-  console.log(util.format("Oh, dear. project %j with user %j invalid", project, user));
-});
-asep.on('verify_valid', function () {
-  console.log('yay!!!!');
-  process.exit(0);
-});
-
-//loadUsers('main_loadUsers');
-//// loadProjects(1, true, 'main_loadProjects');
-//asep.on('main_loadUsers', function () {
-//  load('users', function (result) {
-//    createUser(result, 0, 'main_createUser');
-//  });
-//  asep.on('main_createUser', function (lastUser, lastIndex, users) {
-//    //console.log(lastUser);
-//    createUser(users, lastIndex + 1, 'main_createUser');
-//  });
-//  asep.on('userduplicate', function (lastUser, lastIndex, users) {
-//    console.log(util.format("Skip create existing user %s", lastUser.name));
-//    createUser(users, lastIndex + 1, 'main_createUser');
-//  });
-//  asep.on('userIndexOutOfBound', function (index, users) {
-//    // (1) done. insert user selesai disini.
-//    var count = 0;
-//    loadProjects(1, true, 'main_loadProjects');
-//    asep.on('main_loadProjects', function () {
-//      load('projects', function (result) {
-//        
-//        result.forEach(function (c, i, a) {
-//          getUserByUsername(c.owner.username, function (user) {
-//
-//            if (!isObjectEmpty(user)) {
-//              createProject(user, result, i, 'main_createProject');
-//            } else {}
-//          });
-//        });
-//      });
-//    });
-//    asep.on('main_createProject', function (project, lastIndex, projects) {
-//      count = count + 1;
-//      console.log(util.format("Project index %s, %s created", lastIndex, project.name));
-//      if (count == projects.length) { // ketika semua sudah selesai
-////        projectsMembers();
-////        asep.on('projectMember_done', function () {
-////          verifyStatus();
-////        });
-////        asep.on('verify_invalid', function (project, user) {
-////          console.log(util.format("Oh, dear. project %j with user %j invalid", project, user));
-////        });
-////        asep.on('verify_valid', function () {
-////          console.log('yay!!!!');
-////        });
-//        console.log('selesai');
-//        console.log(count);
-//        console.log(projects.length);
-//      }
-//    });
-//  });
+//projectsMembers();
+//asep.on('projectMember_done', function () {
+//  verifyStatus();
 //});
+//asep.on('verify_invalid', function (project, user) {
+//  console.log(util.format("Oh, dear. project %j with user %j invalid", project, user));
+//});
+//asep.on('verify_valid', function () {
+//  console.log('yay!!!!');
+//  process.exit(0);
+//});
+
+loadUsers('main_loadUsers');
+// loadProjects(1, true, 'main_loadProjects');
+asep.on('main_loadUsers', function () {
+  load('users', function (result) {
+    createUser(result, 0, 'main_createUser');
+  });
+  asep.on('main_createUser', function (lastUser, lastIndex, users) {
+    //console.log(lastUser);
+    createUser(users, lastIndex + 1, 'main_createUser');
+  });
+  asep.on('userduplicate', function (lastUser, lastIndex, users) {
+    console.log(util.format("Skip create existing user %s", lastUser.name));
+    createUser(users, lastIndex + 1, 'main_createUser');
+  });
+  asep.on('userIndexOutOfBound', function (index, users) {
+    // (1) done. insert user selesai disini.
+    var count = 0;
+    loadProjects(1, true, 'main_loadProjects');
+    asep.on('main_loadProjects', function () {
+      load('projects', function (result) {
+        
+        result.forEach(function (c, i, a) {
+          getUserByUsername(c.owner.username, function (user) {
+
+            if (!isObjectEmpty(user)) {
+              createProject(user, result, i, 'main_createProject');
+            } else {}
+          });
+        });
+      });
+    });
+    asep.on('main_createProject', function (project, lastIndex, projects) {
+      count = count + 1;
+      console.log(util.format("Project index %s, %s created", lastIndex, project.name));
+      if (count == projects.length) { // ketika semua sudah selesai
+        projectsMembers();
+        asep.on('projectMember_done', function () {
+          verifyStatus();
+        });
+        asep.on('verify_invalid', function (project, user) {
+          console.log(util.format("Oh, dear. project %j with user %j invalid", project, user));
+        });
+        asep.on('verify_valid', function () {
+          console.log('yay!!!!');
+          process.exit(0);
+        });
+        console.log('selesai');
+        console.log(count);
+        console.log(projects.length);
+      }
+    });
+  });
+});
 
 // console.log("Getting projects\n");
 // loadProjects(1, false, 'main_loadProjects');

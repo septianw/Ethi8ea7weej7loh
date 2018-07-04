@@ -1,7 +1,7 @@
 {
   "base": {
     "protocol": "http",
-    "hostname": "gitlabdev1.as12.qc.labs247.id",
+    "hostname": "gitlabemul1.gitlabemul1.as12.qc.labs247.id",
     "port": 80,
     "pathname": "/api/v4"
   },
@@ -10,37 +10,37 @@
       "projects": {
         "location": "/projects/user/%(user_id)d",
         "query": {
-          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+          "private_token": "svxLwqWoXg2Rv52FgLDm"
         } 
       },
       "users": {
         "location": "/users",
         "query": {
-          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+          "private_token": "svxLwqWoXg2Rv52FgLDm"
         }
       },
       "issues": {
         "location": "/issues",
         "query": {
-          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+          "private_token": "svxLwqWoXg2Rv52FgLDm"
         }
       },
       "projectsmember": {
         "location": "/projects/%(projectid)d/members",
         "query": {
-          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+          "private_token": "svxLwqWoXg2Rv52FgLDm"
         }
       },
       "milestones": {
         "location": "/projects/%(projectid)d/milestones",
         "query": {
-          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+          "private_token": "svxLwqWoXg2Rv52FgLDm"
         }
       },
       "notes": {
         "location": "/projects/%(projectid)d/notes",
         "query": {
-          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+          "private_token": "svxLwqWoXg2Rv52FgLDm"
         }
       }
     },
@@ -48,19 +48,19 @@
       "version": {
         "location": "/version",
         "query": {
-          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+          "private_token": "svxLwqWoXg2Rv52FgLDm"
         }
       },
       "users": {
         "location": "/users",
         "query": {
-          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+          "private_token": "svxLwqWoXg2Rv52FgLDm"
         }
       },
       "projects": {
         "location": "/projects",
         "query": {
-          "private_token": "-mwcTKG_Yg_V5zzaMmEb"
+          "private_token": "svxLwqWoXg2Rv52FgLDm"
         } 
       }
     }
