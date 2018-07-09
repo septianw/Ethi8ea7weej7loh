@@ -27,7 +27,7 @@
         }
       },
       "issues": {
-        "location": "issues",
+        "location": "/projects/%(projectid)d/issues",
         "query": {
           "private_token": "YyNkSBHuparhkHW2KtMp"
         }

@@ -13,6 +13,26 @@ var beep = require('beepbeep');
 var Gl5api = new Apiclient(seedgl5);
 var Gl10api = new Apiclient(seedgl10);
 
+if (!Array.isArray) {
+  Array.isArray = function(arg) {
+    return Object.prototype.toString.call(arg) === '[object Array]';
+  };
+}
+
+function isJSON (input) {
+  try {
+    JSON.parse(input);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
+function isObject(val) {
+  if (val === null) { return false;}
+  return ( (typeof val === 'function') || (typeof val === 'object') );
+}
+
 function Septian() {
   ee.call(this);
 }
@@ -84,7 +104,7 @@ function testCon(repeat) {
         testCon(true);
       }
     });
-  } while (repeat)
+  } while (repeat);
 }
 
 function wait(fun, time) {
@@ -138,7 +158,7 @@ function isUpdated(update, signal, negsignal) {
     negsignal = 'update_negative';
   }
   var now = Math.floor(new Date() / 1000);
-  var expired = now - 21600
+  var expired = now - 21600;
   var fs = require('fs');
   fs.access('data.json', fs.F_OK | fs.W_OK, function (err) {
     if (err) { // belum ada database
@@ -177,7 +197,7 @@ function isUpdated(update, signal, negsignal) {
           } else {  // belum expired
             asep.emit(signal);
           }
-        };
+        }
       });
     }
   });
@@ -359,7 +379,7 @@ function findDup(artefact) {
     return !i || c != a[i - 1];
   });
   ids.forEach(function (c, i, a) {
-    out.push(artefact.filter(function (cc) { return cc.id == c; })[0])
+    out.push(artefact.filter(function (cc) { return cc.id == c; })[0]);
   });
   return out;
 }
@@ -446,9 +466,10 @@ function createProject(user, ps, index, signal) {
     signal = 'projectcreated';
   }
   var p = ps[index];
+  var project = {};
 
   if (p == null) {
-    var project = {
+    project = {
       user_id: user.id,
       name: '',
       path: '',
@@ -460,7 +481,7 @@ function createProject(user, ps, index, signal) {
       visibility: 'private'
     };
   } else {
-    var project = {
+    project = {
       user_id: user.id,
       name: p.name,
       path: p.path,
@@ -632,7 +653,7 @@ function projectsMembers() {
             owned: true
           }
         }, function (err, resp, body) {
-          var dy = JSON.parse(body);
+          var dy = sanitateStringObject(body);
           if (dy.length == 0) {
             // TODO: handle kalau kosong.
             console.log('kosong line 632');
@@ -742,13 +763,11 @@ function projectsMembers() {
                   debugger;
                 }
               });
-
             }
           }
         });
-
-        
       }
+
       function checkProject(i, a, users) {
         var c = a[i];
         // check every project here;
@@ -789,6 +808,192 @@ function projectsMembers() {
         });
       }
       checkProject(0, projects, users);
+    });
+  });
+}
+
+function sanitateStringObject(input) {
+  var output = null;
+  if (isJSON(input)) {
+    output = JSON.parse(input);
+  } else if (isObject(input)) {
+    output = input;
+  } else {
+    asep.emit('error', input);
+  }
+  return output;
+}
+
+function milestonesIssues() {
+  /*
+   * TODO:
+   * - [ ] Do after all verified.
+   * - [ ] get all milestones from all projects
+   * - [ ] post all milestones to all moved projects
+   * - [ ] get all issues from all projects
+   * - [ ] post all issues from all projects
+   */
+  load('projects', function (projects) {
+    projects.forEach(function (project, i, a) {
+      Gl5api.get('milestones', {
+        projectid: project.id
+      }, {}, function (e, r, b) {
+        switch (r.statusCode) {
+          case 200:
+            asep.emit('old_project_milestone_fetched', b);
+            break;
+          default:
+            asep.emit('error', e, r);
+            break;
+        }
+      });
+
+      asep.on('project_milestone_fetched', function (b) {
+        var milestones = sanitateStringObject(b);
+        if (Array.isArray(milestones)) {
+          if (milestones.length > 0) {
+            milestones.forEach(function (milestone, i, a) {
+              asep.emit('signal_create_milestone', milestone);
+            });
+            asep.emit('signal_all_milestones_created');
+          } else {
+            console.log('Empty milestones, skip it.');
+          }
+        } else {
+          asep.emit('error', milestones);
+        }
+      });
+
+      asep.on('signal_create_milestone', function (oldMilestone) {
+        Gl10api.post('milestones', {
+          projectid: encodeURIComponent(project.path_with_namespace)
+        }, {
+          body: JSON.stringify({
+            title: oldMilestone.title,
+            description: oldMilestone.description,
+            due_date: oldMilestone.due_date
+          })
+        }, function (e, r, b) {
+          switch (r.statusCode) {
+            case 201:
+              asep.emit('project_milestone_created', b);
+              break;
+            default:
+              asep.emit('error', e, r);
+              break;
+          }
+        });
+      });
+
+      asep.on('project_milestone_created', function (b) {
+        var newMilestone = sanitateStringObject(b);
+
+        console.log(util.format('Milestone %s on project id %d created', newMilestone.title, newMilestone.project_id));
+      });
+
+      asep.on('signal_all_milestones_created', function () {
+        Gl5api.get('issues', {
+          projectid: project.id
+        }, {}, function (e, r, b) {
+          switch (r.statusCode) {
+            case 200:
+              asep.emit('old_project_issues_fetched', b);
+              break;
+            default:
+              asep.emit('error', e, r);
+              break;
+          }
+          if (e) asep.emit('error', e, r);
+        });
+      });
+
+      asep.on('old_project_issues_fetched', function (b) {
+        var old_issues = sanitateStringObject(b);
+
+        if (Array.isArray(old_issues)) {
+          if (old_issues.length > 0) {
+            old_issues.forEach(function (old_issue, i, a) {
+              if (old_issue.milestone !== null) {
+                asep.emit('signal_get_milestone', old_issue);
+              } else {
+                asep.emit('signal_create_issue', old_issue, null);
+              }
+            });
+            asep.emit('signal_all_issues_created');
+          } else {
+            console.log('empty issues, skip it');
+          }
+        } else {
+          asep.emit('error', old_issues);
+        }
+      });
+
+      asep.on('signal_get_milestone', function (old_issue) {
+        Gl10api.get('milestones', {
+          projectid: encodeURIComponent(project.path_with_namespace)
+        }, {
+          qs: {
+            search: old_issue.milestone.title
+          }
+        }, function (e, r, b) {
+          var milestone = [];
+          switch (r.statusCode) {
+            case 200:
+              milestone = sanitateStringObject(b);
+              if (Array.isArray(milestone) && milestone.length > 0) {
+                if (milestone.length == 1) {
+                  asep.emit('signal_create_issue', old_issue, milestone[0]);
+                } else {
+                  console.log(util.format('%d milestones found, use the first milestone as issue milestone', milestone.length));
+                  asep.emit('signal_create_issue', old_issue, milestone[0]);
+                }
+              }
+              break;
+            default:
+              asep.emit('error', e, r);
+              break;
+          }
+          if (e) asep.emit('error', e, r);
+        });
+      });
+
+      asep.on('signal_create_issue', function(old_issue, newMilestone) {
+        var body = {
+          title: old_issue.title,
+          description: old_issue.description,
+          confidential: false,
+          labels: old_issue.labels.join(','),
+          created_at: old_issue.created_at,
+        };
+        if (newMilestone) {
+          body.milestone_id = newMilestone.id;
+        }
+        if (old_issue.assignee) {
+          body.assignee_ids = old_issue.assignee.id;
+        }
+
+        Gl10api.post('issues', {
+          projectid: project.id
+        }, {
+          body: body
+        }, function (e, r, b) {
+          var issue_response = null;
+          if (e) asep.emit('error', e, r);
+          switch (r.statusCode) {
+            case 201:
+              issue_response = sanitateStringObject(b);
+              asep.emit('signal_issue_created', issue_response);
+              break;
+            default:
+              asep.emit('error', b, r);
+              break;
+          }
+        });
+      });
+
+      asep.on('signal_issue_created', function (issue_response) {
+        console.log(issue_response);
+      });
     });
   });
 }
@@ -848,8 +1053,11 @@ asep.on('main_loadUsers', function () {
           console.log(util.format("Oh, dear. project %j with user %j invalid", project, user));
         });
         asep.on('verify_valid', function () {
-          console.log('yay!!!!');
-          process.exit(0);
+//          milestonesIssues();
+//          asep.on('signal_all_issues_created', function () {
+            console.log('yay!!!!');
+            process.exit(0);
+//          });
         });
         console.log('selesai');
         console.log(count);

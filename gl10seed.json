@@ -1,7 +1,7 @@
 {
   "base": {
     "protocol": "http",
-    "hostname": "gitlabemul1.gitlabemul1.as12.qc.labs247.id",
+    "hostname": "gitlabdev1.as12.qc.labs247.id",
     "port": 80,
     "pathname": "/api/v4"
   },
@@ -10,37 +10,37 @@
       "projects": {
         "location": "/projects/user/%(user_id)d",
         "query": {
-          "private_token": "svxLwqWoXg2Rv52FgLDm"
+          "private_token": "Vj6ADXgveAT5qu6mXZM2"
         } 
       },
       "users": {
         "location": "/users",
         "query": {
-          "private_token": "svxLwqWoXg2Rv52FgLDm"
+          "private_token": "Vj6ADXgveAT5qu6mXZM2"
         }
       },
       "issues": {
-        "location": "/issues",
+        "location": "/projects/%(projectid)d/issues",
         "query": {
-          "private_token": "svxLwqWoXg2Rv52FgLDm"
+          "private_token": "Vj6ADXgveAT5qu6mXZM2"
         }
       },
       "projectsmember": {
         "location": "/projects/%(projectid)d/members",
         "query": {
-          "private_token": "svxLwqWoXg2Rv52FgLDm"
+          "private_token": "Vj6ADXgveAT5qu6mXZM2"
         }
       },
       "milestones": {
         "location": "/projects/%(projectid)d/milestones",
         "query": {
-          "private_token": "svxLwqWoXg2Rv52FgLDm"
+          "private_token": "Vj6ADXgveAT5qu6mXZM2"
         }
       },
       "notes": {
         "location": "/projects/%(projectid)d/notes",
         "query": {
-          "private_token": "svxLwqWoXg2Rv52FgLDm"
+          "private_token": "Vj6ADXgveAT5qu6mXZM2"
         }
       }
     },
@@ -48,20 +48,26 @@
       "version": {
         "location": "/version",
         "query": {
-          "private_token": "svxLwqWoXg2Rv52FgLDm"
+          "private_token": "Vj6ADXgveAT5qu6mXZM2"
         }
       },
       "users": {
         "location": "/users",
         "query": {
-          "private_token": "svxLwqWoXg2Rv52FgLDm"
+          "private_token": "Vj6ADXgveAT5qu6mXZM2"
         }
       },
       "projects": {
         "location": "/projects",
         "query": {
-          "private_token": "svxLwqWoXg2Rv52FgLDm"
+          "private_token": "Vj6ADXgveAT5qu6mXZM2"
         } 
+      },
+      "milestones": {
+        "location": "/projects/%(projectid)d/milestones",
+        "query": {
+          "private_token": "Vj6ADXgveAT5qu6mXZM2"
+        }
       }
     }
   }
